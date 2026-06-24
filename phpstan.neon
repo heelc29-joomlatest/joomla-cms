@@ -11,6 +11,7 @@ parameters:
 	scanDirectories:
 		- libraries/php-encryption
 		- libraries/phpass
+		- libraries/vendor
 	scanFiles:
 		- libraries/loader.php
 		- libraries/namespacemap.php
