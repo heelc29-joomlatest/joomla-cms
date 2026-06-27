@@ -15,6 +15,7 @@ use Joomla\Application\SessionAwareWebApplicationInterface;
 use Joomla\CMS\Extension\PluginInterface;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\CMS\WebAuthn\Repository\CredentialRecordRepositoryInterface;
 use Joomla\Database\DatabaseInterface;
 use Joomla\DI\Container;
 use Joomla\DI\ServiceProviderInterface;
@@ -46,9 +47,11 @@ return new class () implements ServiceProviderInterface {
                 $session = $container->has('session') ? $container->get('session') : $this->getSession($app);
 
                 $db                    = $container->get(DatabaseInterface::class);
-                $credentialsRepository = $container->has(PublicKeyCredentialSourceRepository::class)
-                    ? $container->get(PublicKeyCredentialSourceRepository::class)
-                    : new CredentialRepository($db);
+                $credentialsRepository = $container->has(CredentialRecordRepositoryInterface::class)
+                    ? $container->get(CredentialRecordRepositoryInterface::class)
+                    : ($container->has(PublicKeyCredentialSourceRepository::class)
+                        ? $container->get(PublicKeyCredentialSourceRepository::class)
+                        : new CredentialRepository($db));
 
                 $metadataRepository = null;
                 $params             = new Registry($config['params'] ?? '{}');

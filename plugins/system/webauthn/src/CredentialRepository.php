@@ -15,6 +15,7 @@ use Joomla\CMS\Encrypt\Aes;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\CMS\WebAuthn\Repository\CredentialRecordRepositoryInterface;
 use Joomla\Database\DatabaseAwareInterface;
 use Joomla\Database\DatabaseAwareTrait;
 use Joomla\Database\DatabaseInterface;
@@ -32,8 +33,10 @@ use Webauthn\PublicKeyCredentialUserEntity;
  * Handles the storage of WebAuthn credentials in the database
  *
  * @since   4.0.0
+*
+ * @todo The class will no longer implement PublicKeyCredentialSourceRepository when we upgrade to WebAuthn library 5.0 or later
  */
-final class CredentialRepository implements PublicKeyCredentialSourceRepository, DatabaseAwareInterface
+final class CredentialRepository implements CredentialRecordRepositoryInterface, PublicKeyCredentialSourceRepository, DatabaseAwareInterface
 {
     use DatabaseAwareTrait;
 

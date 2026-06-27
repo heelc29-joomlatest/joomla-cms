@@ -18,6 +18,7 @@ use Cose\Algorithm\ManagerFactory;
 use Cose\Algorithm\Signature\ECDSA;
 use Cose\Algorithm\Signature\EdDSA;
 use Cose\Algorithm\Signature\RSA;
+use Joomla\CMS\WebAuthn\Repository\CredentialRecordRepositoryInterface;
 use Lcobucci\Clock\SystemClock;
 use ParagonIE\ConstantTime\Base64;
 use ParagonIE\ConstantTime\Base64UrlSafe;
@@ -91,19 +92,20 @@ final class Server
     private ManagerFactory $coseAlgorithmManagerFactory;
 
     /**
-     * Public Key credential source respoitory instance
+     * Public Key credential source repository instance
      *
-     * @var PublicKeyCredentialSourceRepository
+     * @var CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository
      * @since 5.0.0
+     * @todo The type will change to CredentialRecordRepositoryInterface when we upgrade to WebAuthn library 5.0 or later
      */
-    private PublicKeyCredentialSourceRepository $publicKeyCredentialSourceRepository;
+    private CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository $publicKeyCredentialSourceRepository;
 
     /**
      * Token binding handler
      *
      * @var ?TokenBindingHandler
      * @since 5.0.0
-     * @deprecated 6.0 Will be removed when we upgrade to WebAuthn library 7.0 or later
+     * @deprecated 6.0 Will be removed when we upgrade to WebAuthn library 5.0 or later
      */
     private ?TokenBindingHandler $tokenBindingHandler;
 
@@ -135,13 +137,24 @@ final class Server
      * Constructor
      *
      * @param PublicKeyCredentialRpEntity $relayingParty The relaying party entity (server information)
-     * @param PublicKeyCredentialSourceRepository $publicKeyCredentialSourceRepository Public Key repository service
+     * @param CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository $publicKeyCredentialSourceRepository Public Key repository service
      * @param MetadataStatementRepository|null $metadataStatementRepository Metadata Statement (MDS) service (optional)
      *
      * @since 5.0.0
      */
-    public function __construct(PublicKeyCredentialRpEntity $relayingParty, PublicKeyCredentialSourceRepository $publicKeyCredentialSourceRepository, ?MetadataStatementRepository $metadataStatementRepository = null)
+    public function __construct(PublicKeyCredentialRpEntity $relayingParty, CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository $publicKeyCredentialSourceRepository, ?MetadataStatementRepository $metadataStatementRepository = null)
     {
+        if (!$publicKeyCredentialSourceRepository instanceof CredentialRecordRepositoryInterface) {
+            trigger_deprecation(
+                'joomla/cms/webauthn',
+                '__DEPLOY_VERSION__',
+                'Passing a "%s" as constructor\'s 2nd argument of "%s" is deprecated, "%s" expected.',
+                PublicKeyCredentialSourceRepository::class,
+                __CLASS__,
+                CredentialRecordRepositoryInterface::class
+            );
+        }
+
         $this->rpEntity = $relayingParty;
 
         $this->coseAlgorithmManagerFactory = new ManagerFactory();

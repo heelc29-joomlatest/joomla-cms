@@ -17,6 +17,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\User;
+use Joomla\CMS\WebAuthn\Repository\CredentialRecordRepositoryInterface;
 use Joomla\CMS\WebAuthn\Server;
 use Joomla\Session\SessionInterface;
 use Webauthn\AuthenticationExtensions\AuthenticationExtensionsClientInputs;
@@ -86,19 +87,30 @@ final class Authentication
     /**
      * Public constructor.
      *
-     * @param   ?ApplicationInterface                 $app       The app we are running in
-     * @param   ?SessionInterface                     $session   The app session object
-     * @param   ?PublicKeyCredentialSourceRepository  $credRepo  Credentials repo
-     * @param   ?MetadataStatementRepository          $mdsRepo   Authenticator metadata repo
+     * @param   ?ApplicationInterface                                                         $app       The app we are running in
+     * @param   ?SessionInterface                                                             $session   The app session object
+     * @param   CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository|null  $credRepo  Credentials repo
+     * @param   ?MetadataStatementRepository                                                  $mdsRepo   Authenticator metadata repo
      *
      * @since   4.2.0
      */
     public function __construct(
         ?ApplicationInterface $app = null,
         ?SessionInterface $session = null,
-        ?PublicKeyCredentialSourceRepository $credRepo = null,
+        CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository|null $credRepo = null,
         ?MetadataStatementRepository $mdsRepo = null
     ) {
+        if (!$credRepo instanceof CredentialRecordRepositoryInterface) {
+            trigger_deprecation(
+                'joomla/plugin/system/webauthn',
+                '__DEPLOY_VERSION__',
+                'Passing a "%s" as constructor\'s 3rd argument of "%s" is deprecated, "%s" expected.',
+                PublicKeyCredentialSourceRepository::class,
+                __CLASS__,
+                CredentialRecordRepositoryInterface::class
+            );
+        }
+
         $this->app                   = $app;
         $this->session               = $session;
         $this->credentialsRepository = $credRepo;
@@ -133,11 +145,13 @@ final class Authentication
     /**
      * Returns the Public Key credential source repository object
      *
-     * @return  PublicKeyCredentialSourceRepository|null
+     * @return  CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository|null
      *
      * @since   4.2.0
+     *
+     * @todo    The return type will change to CredentialRecordRepositoryInterface|null when we upgrade to WebAuthn library 5.0 or later
      */
-    public function getCredentialsRepository(): ?PublicKeyCredentialSourceRepository
+    public function getCredentialsRepository(): CredentialRecordRepositoryInterface|PublicKeyCredentialSourceRepository|null
     {
         return $this->credentialsRepository;
     }

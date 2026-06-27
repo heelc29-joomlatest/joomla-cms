@@ -13,6 +13,7 @@ namespace Joomla\Plugin\Multifactorauth\Webauthn;
 use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\User\UserFactoryInterface;
+use Joomla\CMS\WebAuthn\Repository\CredentialRecordRepositoryInterface;
 use Joomla\Component\Users\Administrator\Helper\Mfa as MfaHelper;
 use Joomla\Component\Users\Administrator\Table\MfaTable;
 use Webauthn\AttestationStatement\AttestationStatement;
@@ -39,8 +40,10 @@ use Webauthn\TrustPath\EmptyTrustPath;
  * This behavior can be changed by passing a user ID in the constructor of the class.
  *
  * @since 4.2.0
+*
+ * @todo The class will no longer implement PublicKeyCredentialSourceRepository when we upgrade to WebAuthn library 5.0 or later
  */
-class CredentialRepository implements PublicKeyCredentialSourceRepository
+class CredentialRepository implements CredentialRecordRepositoryInterface, PublicKeyCredentialSourceRepository
 {
     /**
      * The user ID we will operate with
