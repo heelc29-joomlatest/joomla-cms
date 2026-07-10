@@ -106,6 +106,8 @@ $config = (new Config())
         [
             // Basic ruleset is PSR 12
             '@PSR12'                                           => true,
+            // Migration rules to improve code towards the minimum PHP supported
+            // '@autoPHPMigration'                                => true,
             // Short array syntax
             'array_syntax'                                     => ['syntax' => 'short'],
             // List of values separated by a comma is contained on a single line should not have a trailing comma like [$foo, $bar,] = ...
@@ -136,6 +138,132 @@ $config = (new Config())
             'combine_consecutive_unsets'                       => true,
             // There must be no sprintf calls with only the first argument
             'no_useless_sprintf'                               => true,
+
+            // // Alias
+            // 'array_push' => true,
+            // 'modernize_strpos' => true,
+            // 'no_alias_functions' => true,
+            // 'set_type_to_cast' => true,
+
+            // // Array Notation
+            // // 'array_syntax'
+            // 'no_multiline_whitespace_around_double_arrow' => true,
+            // 'no_whitespace_before_comma_in_array' => true,
+            // 'no_whitespace_in_empty_array' => true,
+            // 'trim_array_spaces' => true,
+            // 'whitespace_after_comma_in_array' => ['ensure_single_space' => true],
+
+            // // Basic
+            // // 'no_trailing_comma_in_singleline'
+
+            // // Casing
+            // 'class_reference_name_casing' => true,
+            // 'integer_literal_case' => true,
+            // 'native_function_casing' => true,
+            // 'native_type_declaration_casing' => true,
+
+            // // Cast Notation
+            // 'cast_spaces' => true,
+            // 'modernize_types_casting' => true,
+            // 'no_short_bool_cast' => true,
+
+            // // Class Notation
+            // 'class_attributes_separation' => true,
+            // 'no_null_property_initialization' => true,
+            // 'ordered_interfaces' => true,
+            // 'ordered_traits' => true,
+            // 'stringable_for_to_string' => true,
+
+            // // Comment
+            // 'comment_to_phpdoc' => true,
+            // 'multiline_comment_opening_closing' => true,
+            // 'no_empty_comment' => true,
+            // 'single_line_comment_spacing' => true,
+            // // 'single_line_comment_style' => true,
+
+            // // Constant Notation
+            // // 'native_constant_invocation' => true,
+
+            // // Control Structure
+            // // 'no_break_comment'
+            // // 'no_unneeded_control_parentheses'
+            // // 'no_useless_else'
+            // // 'simplified_if_return' => true,
+            // // 'trailing_comma_in_multiline'
+
+            // // Function Notation
+            // 'implode_call' => true,
+            // 'lambda_not_used_import' => true,
+            // // 'native_function_invocation'
+            // 'no_useless_printf' => true,
+            // // 'no_useless_sprintf'
+            // // 'nullable_type_declaration_for_default_null_value'
+
+            // // Import
+            // // 'global_namespace_import'
+            // 'no_unneeded_import_alias' => true,
+            // // 'no_unused_imports'
+            // // 'ordered_imports'
+
+            // // Language Construct
+            // // 'combine_consecutive_issets'
+            // // 'combine_consecutive_unsets'
+
+            // // List Notation
+            // 'list_syntax' => true,
+
+            // // Naming
+            // 'no_homoglyph_names' => true,
+
+            // // Operator
+            // 'assign_null_coalescing_to_coalesce_equal' => false,
+            // // 'binary_operator_spaces'
+            // 'concat_space' => ['spacing' => 'one'],
+            // 'no_useless_concat_operator' => true,
+            // 'object_operator_without_whitespace' => true,
+            // 'standardize_not_equals' => true,
+
+            // // PHP Tag
+            // 'echo_tag_syntax' => true,
+
+            // // PHPDoc
+            // 'align_multiline_comment' => true,
+            // // 'no_blank_lines_after_phpdoc' => true,
+            // 'no_empty_phpdoc' => true,
+            // 'phpdoc_add_missing_param_annotation' => true,
+            // 'phpdoc_indent' => true,
+            // 'phpdoc_no_duplicate_types' => true,
+            // 'phpdoc_param_order' => true,
+            // 'phpdoc_single_line_var_spacing' => true,
+            // // 'phpdoc_to_comment' => true,
+            // 'phpdoc_trim_consecutive_blank_line_separation' => true,
+            // 'phpdoc_trim' => true,
+            // 'phpdoc_types' => true,
+            // 'phpdoc_var_annotation_correct_order' => true,
+            // 'phpdoc_var_without_name' => true,
+
+            // // Return Notation
+            // 'no_useless_return' => true,
+ 
+            // // Semicolon
+            // 'multiline_whitespace_before_semicolons' => true,
+            // 'no_empty_statement' => true,
+            // 'no_singleline_whitespace_before_semicolons' => true,
+            // 'semicolon_after_instruction' => true,
+            // 'space_after_semicolon' => true,
+
+            // // String Notation
+            // // 'explicit_string_variable' => true,
+            // 'single_quote' => true,
+            // // 'string_implicit_backslashes' => true,
+
+            // // Whitespace
+            // 'array_indentation' => true,
+            // 'heredoc_indentation' => false,
+            // 'method_chaining_indentation' => true,
+            // 'no_spaces_around_offset' => true,
+            // 'type_declaration_spaces' => true,
+            // 'types_spaces' => true,
         ]
     )
     ->setRuleCustomisationPolicy(new JoomlaPolicy())
