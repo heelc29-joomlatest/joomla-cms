@@ -1,19 +1,11 @@
 describe('Test that the webauthn system plugin', { browser: '!firefox' }, () => {
   beforeEach(() => {
-    Cypress.automation('remote:debugger:protocol', { command: 'WebAuthn.enable', params: {} }).then(() => {
-      Cypress.automation('remote:debugger:protocol', {
-        command: 'WebAuthn.addVirtualAuthenticator',
-        params: {
-          options: {
-            protocol: 'ctap2', transport: 'internal', hasResidentKey: true, hasUserVerification: true, isUserVerified: true,
-          },
-        },
-      });
-    });
+    return cy.webauthn_enable()
+      .then(() => cy.webauthn_addAuthenticator());
   });
   afterEach(() => {
-    cy.db_updateExtensionParameter('attestationSupport', '0', 'plg_system_webauthn');
-    Cypress.automation('remote:debugger:protocol', { command: 'WebAuthn.disable', params: {} });
+    return cy.db_updateExtensionParameter('attestationSupport', '0', 'plg_system_webauthn')
+      .then(() => cy.webauthn_disable());
   });
 
   it('can use passkeys in frontend', () => {
