@@ -35,3 +35,28 @@ Cypress.Commands.add('webauthn_addAuthenticator', (options = {}) => {
     params: { options: opts },
   }).then((res) => res.authenticatorId);
 });
+
+/**
+ * Remove a previously created virtual authenticator.
+ *
+ * @param {string} id - The authenticatorId returned by webauthn_addAuthenticator.
+ */
+Cypress.Commands.add('webauthn_removeAuthenticator', (id) =>
+  Cypress.automation('remote:debugger:protocol', {
+    command: 'WebAuthn.removeVirtualAuthenticator',
+    params: { authenticatorId: id },
+  }),
+);
+
+/**
+ * Get credentials from a virtual WebAuthn authenticator.
+ *
+ * @param {string} id - authenticatorId returned by webauthn_addAuthenticator
+ * @returns {Promise<Array>} resolves with the credentials array
+ */
+Cypress.Commands.add('webauthn_getCredentials', (id) => {
+  return Cypress.automation('remote:debugger:protocol', {
+    command: 'WebAuthn.getCredentials',
+    params: { authenticatorId: id },
+  }).then((res) => res.credentials);
+});
