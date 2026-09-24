@@ -12,7 +12,7 @@ jobs:
   composer:
     name: Install PHP dependencies
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php8.5
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -36,7 +36,7 @@ jobs:
   npm:
     name: Install JS/CSS dependencies and build assets
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php8.5
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     needs: [composer]
     steps:
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
@@ -69,7 +69,7 @@ jobs:
   code-style-php:
     name: Check PHP code style
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php8.5
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     needs: [composer]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -97,7 +97,7 @@ jobs:
   code-style-js-css:
     name: Check Javascript & CSS code style
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php8.5
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     needs: [composer, npm]
     strategy:
       matrix:
@@ -123,7 +123,7 @@ jobs:
   phpstan:
     name: Run PHPstan
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php8.5
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     needs: [code-style-php]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -152,11 +152,8 @@ jobs:
   tests-unit:
     name: Run Unit tests
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php${{ matrix.php_version }}
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     needs: [code-style-php]
-    strategy:
-      matrix:
-        php_version: ['8.3', '8.4', '8.5']
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -173,11 +170,10 @@ jobs:
   tests-integration:
     name: Run integration tests
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:php${{ matrix.php_version }}
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:php8.6
     needs: [code-style-php]
     strategy:
       matrix:
-        php_version: ['8.3', '8.4', '8.5']
         config:
           - my_version: '9'
             engine: 'mysqli'
@@ -261,9 +257,6 @@ jobs:
     name: Run Unit tests (Windows)
     runs-on: windows-latest
     needs: [code-style-php]
-    strategy:
-      matrix:
-        php_version: ['8.3', '8.4', '8.5']
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -279,7 +272,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
         with:
-          php-version: ${{ matrix.php_version }}
+          php-version: '8.6'
           extensions: openssl, mbstring, fileinfo, gd, gmp, pgsql, mysql, mysqli, curl, opcache, ldap
           ini-values: post_max_size=256M, date.timezone="UTC"
       - name: Install Composer dependencies
@@ -292,9 +285,6 @@ jobs:
     name: Run integration tests (Windows)
     runs-on: windows-latest
     needs: [code-style-php]
-    strategy:
-      matrix:
-        php_version: ['8.3', '8.4', '8.5']
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -314,7 +304,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@7c071dfe9dc99bdf297fa79cb49ea005b9fcadbc # v2.37.1
         with:
-          php-version: ${{ matrix.php_version }}
+          php-version: '8.6'
           extensions: openssl, mbstring, fileinfo, gd, gmp, pgsql, mysql, mysqli, curl, opcache, ldap
           ini-values: post_max_size=256M, date.timezone="UTC"
       - name: Install Composer dependencies
@@ -330,7 +320,7 @@ jobs:
   tests-system-prepare:
     name: Prepare system tests
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:cypress8.5
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:cypress8.6
     needs: [composer, npm]
     env:
       CYPRESS_VERIFY_TIMEOUT: 100000
@@ -362,47 +352,36 @@ jobs:
   tests-system:
     name: Run system tests
     runs-on: ubuntu-latest
-    container: joomlaprojects/docker-images:cypress${{ matrix.config.php_version }}
+    container: ghcr.io/heelc29-joomlatest/joomla-tests:cypress8.6
     needs: [tests-system-prepare]
     strategy:
       matrix:
         browser: ['chrome', 'edge']
         config:
-          - php_version: '8.5'
-            test_group: cmysqlmax
-            db_engine: mysqli
-            db_host: mysql
-            my_version: '9'
-          - php_version: '8.5'
-            test_group: cmysqllts
-            db_engine: mysqli
-            db_host: mysql
-            my_version: '8.4'
-          - php_version: '8.3'
-            test_group: cmysql
+          - test_group: cmysql
             db_engine: mysqli
             db_host: mysql
             my_version: '8.0.13'
-          - php_version: '8.4'
-            test_group: cmariamax
+          - test_group: cmysqlmax
             db_engine: mysqli
-            db_host: maria
-            maria_version: '12.0'
-          - php_version: '8.3'
-            test_group: cmaria
+            db_host: mysql
+            my_version: '9'
+          - test_group: cmaria
             db_engine: mysqli
             db_host: maria
             maria_version: '10.4'
-          - php_version: '8.3'
-            test_group: cpostgres
+          - test_group: cmariamax
+            db_engine: mysqli
+            db_host: maria
+            maria_version: '12'
+          - test_group: cpostgres
             db_engine: pgsql
             db_host: postgres
-            pg_version: '12.0'
-          - php_version: '8.5'
-            test_group: cpostgresmax
+            pg_version: '12'
+          - test_group: cpostgresmax
             db_engine: pgsql
             db_host: postgres
-            pg_version: '18.0'
+            pg_version: '18'
     env:
       JOOMLA_INSTALLATION_DISABLE_LOCALHOST_CHECK: 1
     steps:
@@ -449,7 +428,7 @@ jobs:
           MYSQL_ROOT_PASSWORD: joomla_ut
           MYSQL_DATABASE: test_joomla
       maria:
-        image: mariadb:${{ matrix.config.maria_version || '12.0' }}
+        image: mariadb:${{ matrix.config.maria_version || '12' }}
         env:
           MARIADB_USER: joomla_ut
           MARIADB_PASSWORD: joomla_ut
