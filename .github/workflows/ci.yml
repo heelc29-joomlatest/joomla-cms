@@ -84,7 +84,7 @@ jobs:
       - name: Check PHP code style
         run: |
           set -e
-          ./libraries/vendor/bin/php-cs-fixer fix -vvv --diff
+          ./libraries/vendor/bin/php-cs-fixer fix -vvv --diff --allow-unsupported-php-version=yes
           git config --global --add safe.directory "$GITHUB_WORKSPACE"
           if [ "$GITHUB_EVENT_NAME" = "push" ] && [ "$GITHUB_REPOSITORY" != "joomla/joomla-cms" ] && ! git diff --quiet; then
             git config user.name  "github-actions[bot]"
